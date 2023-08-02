@@ -21,8 +21,10 @@ public class BalanceReadingResource {
     @Value("${urlBalanceReading}")
     private String url;
     @GetMapping("/balanceReading/{accountId}")
-    ResponseEntity<Root> balanceReading(@RequestHeader("Content-Type") String contentType, @RequestHeader("Auth-Schema") String authSchema,
-                        @RequestHeader("Api-key") String apiKey, @PathVariable("accountId") Long accountId) {
+    ResponseEntity<Root> balanceReading(@RequestHeader("Content-Type") String contentType,
+                                        @RequestHeader("Auth-Schema") String authSchema,
+                                        @RequestHeader("Api-key") String apiKey,
+                                        @PathVariable("accountId") Long accountId) {
         try{
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
