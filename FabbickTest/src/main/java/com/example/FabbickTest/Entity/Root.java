@@ -12,11 +12,11 @@ public class Root {
         this.status = status; }
     String status;
     @JsonProperty("error")
-    public ArrayList<Object> getError() {
+    public ArrayList<String> getError() {
         return this.error; }
-    public void setError(ArrayList<Object> error) {
+    public void setError(ArrayList<String> error) {
         this.error = error; }
-    ArrayList<Object> error;
+    ArrayList<String> error;
     @JsonProperty("payload")
     public Payload getPayload() {
         return this.payload; }

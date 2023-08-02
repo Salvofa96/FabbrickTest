@@ -1,6 +1,7 @@
 package com.example.FabbickTest.Controller;
 
 import com.example.FabbickTest.Entity.MoneyTransfer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 public class MoneyTransferResource {
     @Value("${urlMoneyTransfer}")
@@ -27,21 +29,18 @@ public class MoneyTransferResource {
                                     @RequestHeader("Api-key") String apiKey,
                                     @PathVariable("accountId") Long accountId,
                                     @RequestBody MoneyTransfer moneyTransfer){
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("Auth-Schema", authSchema);
-        headers.add("Api-key", apiKey);
-
-        Map<String, Long> params = new HashMap<String, Long>();
-        params.put("accountId", accountId);
-        URI uri = UriComponentsBuilder.fromUriString(url)
-                .buildAndExpand(params)
-                .toUri();
-
-        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.add("Auth-Schema", authSchema);
+            headers.add("Api-key", apiKey);
+            Map<String, Long> params = new HashMap<String, Long>();
+            params.put("accountId", accountId);
+            URI uri = UriComponentsBuilder.fromUriString(url)
+                    .buildAndExpand(params)
+                    .toUri();
+            HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
             MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
             map.add("receiverName",moneyTransfer.getReceiverName());
             map.add("description", moneyTransfer.getDescription());
@@ -50,9 +49,13 @@ public class MoneyTransferResource {
             map.add("executionDate", moneyTransfer.getExecutionDate());
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
             ResponseEntity<MoneyTransfer> response = restTemplate.postForEntity( url, request , MoneyTransfer.class );
+
+            log.info("Info Bonifico ");
+
             return  ResponseEntity.accepted().body(response.getBody());
         }
         catch(Exception e){
+            log.error("Bonifico non reperibile",e);
             MoneyTransfer m=new MoneyTransfer();
             m.setCode("API000");
             m.setStatus("ERROR");
