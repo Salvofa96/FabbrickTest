@@ -39,7 +39,9 @@ public class BalanceReadingResource {
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
             ResponseEntity<Root> response =
                     restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Root.class);
+
             log.info("lettura saldo avvenuta");
+
             return ResponseEntity.accepted().body(response.getBody());
         } catch(Exception e){
             log.error("saldo non disponibile");
